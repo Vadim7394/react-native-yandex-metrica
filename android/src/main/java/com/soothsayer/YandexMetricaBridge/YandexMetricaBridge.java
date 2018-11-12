@@ -48,27 +48,18 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void activateWithApiKey(String apiKey) {
     initialized = true;
-    if (dryRun) {
-      Log.i(TAG, "Dry run mode, skip Yandex Mobile Metrica activation");
-      return;
-    }
-
     YandexMetrica.activate(getReactApplicationContext(), apiKey);
   }
 
   @ReactMethod
   public void reportEvent(String message, @Nullable ReadableMap params) {
-	if (dryRun) {
-      Log.i(TAG, "Dry run mode, skip event reporting");
-      return;
-    }
-	try {
-		  if (params != null) {
-            YandexMetrica.reportEvent(message, convertReadableMapToJson(params));
-        } else {
-          YandexMetrica.reportEvent(message);
-        }
-	} catch (Exception e) {
+    try {
+        if (params != null) {
+              YandexMetrica.reportEvent(message, convertReadableMapToJson(params));
+          } else {
+            YandexMetrica.reportEvent(message);
+          }
+    } catch (Exception e) {
       Log.e(TAG, "Unable to report Yandex Mobile Metrica event: " + e);
     }
   }
@@ -118,6 +109,24 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
     }
     catch (Throwable error) {
         YandexMetrica.reportError(message, error);
+    }
+  }
+
+  @ReactMethod
+  public void reportDeepLink(String link) {
+    try {
+        YandexMetrica.reportAppOpen(link);
+    } catch (Exception e) {
+      Log.e(TAG, "Unable to report Yandex Mobile Metrica deeplink: " + e);
+    }
+  }
+
+  @ReactMethod
+  public void reportReferralUrl(String link) {
+    try {
+        YandexMetrica.reportReferralUrl(link);
+    } catch (Exception e) {
+      Log.e(TAG, "Unable to report Yandex Mobile Metrica reportReferralUrl: " + e);
     }
   }
 
