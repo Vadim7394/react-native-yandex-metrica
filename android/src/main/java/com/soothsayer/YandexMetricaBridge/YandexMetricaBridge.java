@@ -148,12 +148,4 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
     promise.resolve(initialized || initializedStatic);
   }
 
-  public static void activate(Context context, String apiKey) {
-    YandexMetrica.activate(context, apiKey);
-    initializedStatic = true;
-  }
-
-  public static void enableActivityAutoTracking(final Application app) {
-    YandexMetrica.enableActivityAutoTracking(app);
-  }
 }
