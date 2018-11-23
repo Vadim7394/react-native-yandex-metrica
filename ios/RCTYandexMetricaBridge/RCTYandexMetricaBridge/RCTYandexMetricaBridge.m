@@ -31,17 +31,26 @@ YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration a
 [YMMYandexMetrica activateWithConfiguration:configuration];
 }
 
-RCT_EXPORT_METHOD(reportEvent:(NSString *)event)
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message)
 {
-  if (dryRun) {
-    NSLog(@"Dry run mode, skip event reporting");
-    return;
-  }
-  [YMMYandexMetrica reportEvent:event
-                      onFailure:^(NSError *error) {
-  NSLog(@"DID FAIL REPORT EVENT: %@", event);
-  NSLog(@"REPORT ERROR: %@", [error localizedDescription]);
-                      }];
+    [YMMYandexMetrica reportEvent:message onFailure:NULL];
+}
+
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message parameters:(nullable NSDictionary *)params)
+{
+    [YMMYandexMetrica reportEvent:message parameters:params onFailure:NULL];
+}
+
+RCT_EXPORT_METHOD(reportDeepLink:(NSString *)link)
+{
+    NSURL *url = [NSURL URLWithString:[link stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    [YMMYandexMetrica handleOpenURL:url];
+}
+
+RCT_EXPORT_METHOD(reportReferralUrl:(NSString *)link)
+{
+    NSURL *url = [NSURL URLWithString:[link stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    [YMMYandexMetrica reportReferralUrl:url];
 }
 
 RCT_EXPORT_METHOD(setDryRun:(BOOL *)enabled)

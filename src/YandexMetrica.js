@@ -1,7 +1,7 @@
-import {YandexMetricaBridge as YandexMetricaBridgeNative} from './NativeModule';
+import { YandexMetricaBridge as YandexMetricaBridgeNative } from './NativeModule';
+console.log(YandexMetricaBridgeNative);
 
 export class YandexMetrica {
-
   static activateWithApiKey(apiKey) {
     YandexMetricaBridgeNative.activateWithApiKey(apiKey);
   }
@@ -15,6 +15,23 @@ export class YandexMetrica {
     YandexMetricaBridgeNative.reportEvent(message, params);
   }
 
+  /**
+   * Sends a report deep link (optional).
+   * @param {string} link
+   */
+  static reportDeepLink(link: string) {
+    if (link) YandexMetricaBridgeNative.reportDeepLink(link);
+    else console.log('Link empty');
+  }
+
+  /**
+   * Sends a report referral url (optional).
+   * @param {string} link
+   */
+  static reportReferralUrl(link: string) {
+    if (link) YandexMetricaBridgeNative.reportReferralUrl(link);
+    else console.log('Link empty');
+  }
 
   /**
    * Sends error with reason.
@@ -32,5 +49,4 @@ export class YandexMetrica {
   static isInitialized() {
     return YandexMetricaBridgeNative.isInitialized();
   }
-
 }

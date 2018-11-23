@@ -13,6 +13,7 @@ import com.yandex.metrica.YandexMetrica;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.yandex.metrica.YandexMetricaConfig;
 
 import java.lang.Exception;
 
@@ -45,30 +47,26 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
     return TAG;
   }
 
-  @ReactMethod
-  public void activateWithApiKey(String apiKey) {
-    initialized = true;
-    if (dryRun) {
-      Log.i(TAG, "Dry run mode, skip Yandex Mobile Metrica activation");
-      return;
+    @ReactMethod
+    public void activateWithApiKey(String key) {
+        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(key);
+        YandexMetrica.activate(getReactApplicationContext().getApplicationContext(), configBuilder.build());
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            Application application = activity.getApplication();
+            YandexMetrica.enableActivityAutoTracking(application);
+        }
     }
-
-    YandexMetrica.activate(getReactApplicationContext(), apiKey);
-  }
 
   @ReactMethod
   public void reportEvent(String message, @Nullable ReadableMap params) {
-	if (dryRun) {
-      Log.i(TAG, "Dry run mode, skip event reporting");
-      return;
-    }
-	try {
-		  if (params != null) {
-            YandexMetrica.reportEvent(message, convertReadableMapToJson(params));
-        } else {
-          YandexMetrica.reportEvent(message);
-        }
-	} catch (Exception e) {
+    try {
+        if (params != null) {
+              YandexMetrica.reportEvent(message, convertReadableMapToJson(params));
+          } else {
+            YandexMetrica.reportEvent(message);
+          }
+    } catch (Exception e) {
       Log.e(TAG, "Unable to report Yandex Mobile Metrica event: " + e);
     }
   }
@@ -118,6 +116,24 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
     }
     catch (Throwable error) {
         YandexMetrica.reportError(message, error);
+    }
+  }
+
+  @ReactMethod
+  public void reportDeepLink(String link) {
+    try {
+        YandexMetrica.reportAppOpen(link);
+    } catch (Exception e) {
+      Log.e(TAG, "Unable to report Yandex Mobile Metrica deeplink: " + e);
+    }
+  }
+
+  @ReactMethod
+  public void reportReferralUrl(String link) {
+    try {
+        YandexMetrica.reportReferralUrl(link);
+    } catch (Exception e) {
+      Log.e(TAG, "Unable to report Yandex Mobile Metrica reportReferralUrl: " + e);
     }
   }
 

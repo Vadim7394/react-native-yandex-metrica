@@ -23,11 +23,6 @@ public class YandexMetricaBridgePackage implements ReactPackage {
     return modules;
   }
 
-  // Deprecated from RN 0.47.0
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
-
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     return Arrays.<ViewManager>asList();
