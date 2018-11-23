@@ -47,6 +47,7 @@ public class YandexMetricaBridge extends ReactContextBaseJavaModule {
     return TAG;
   }
 
+
     @ReactMethod
     public void activateWithApiKey(String key) {
         YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(key);

@@ -9,11 +9,13 @@
 			<key>orderHint</key>
 			<integer>70</integer>
 		</dict>
+
 		<key>RCTYandexMetricaBridge.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>70</integer>
 		</dict>
+
 	</dict>
 </dict>
 </plist>
